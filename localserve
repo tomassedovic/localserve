@@ -1,0 +1,24 @@
+#!/usr/bin/python
+
+# (c) 2012, Tomas Sedovic <tomas@sedovic.cz>. Licensed under 2-clause BSD.
+
+'''Serves the current directory contents over HTTP.
+
+Usage: localserve [port]
+
+If you don't specify the port, 8000 will be used.
+'''
+
+import sys
+
+if __name__ == '__main__':
+    if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help']:
+        print(__doc__)
+        exit(0)
+
+    try:
+        import http.server  # Python 3
+        http.server.test(HandlerClass=http.server.SimpleHTTPRequestHandler)
+    except ImportError:
+        import SimpleHTTPServer  # Python 2
+        SimpleHTTPServer.test()
