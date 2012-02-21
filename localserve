@@ -12,6 +12,17 @@ If you don't specify the port, 8000 will be used.
 import sys, socket
 
 
+def last_exception_message():
+    """
+    Return the message of the most recently raised exception.
+
+    This is useful for compatibility with Python < 2.6. These older version
+    didn't receive backport of the 3.x syntax for binding exception objects.
+    """
+    exc_value = sys.exc_info()[1]
+    if exc_value and len(exc_value.args):
+        return exc_value.args[1]
+
 def start_server():
     try:
         import SimpleHTTPServer  # Python 2
@@ -24,12 +35,12 @@ def start_server():
 if __name__ == '__main__':
     if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help']:
         print(__doc__)
-        exit(0)
+        sys.exit(0)
 
     try:
         start_server()
-    except socket.error as err:
-        sys.stderr.write('Error: ' + err.strerror + '\n')
-        exit(1)
+    except socket.error:
+        sys.stderr.write('Error: ' + last_exception_message() + '\n')
+        sys.exit(1)
     except KeyboardInterrupt:
         pass
