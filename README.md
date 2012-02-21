@@ -12,12 +12,40 @@ Also, it's like super easy to install.
 
 Requirements
 ------------
-A reasonably recent version of Python 2 or 3.
+Python 2.4 or higher (yup, 3x included).
 
 Installation
 ------------
 1. Place the `localserve` executable on your `$PATH`.
 2. There's no step 2.
+
+What's wrong with `python -m SimpleHTTPServer`?
+-----------------------------------------------
+Nothing!
+
+It's just that I happen to move across systems -- and believe it or not, some
+only have Python 3 installed by default (hat tip to Arch users).
+
+Of course, you could just alias this:
+
+    python -m SimpleHTTPServer || python -m http.server
+
+and it'll work. Except that you can't specify the port number as an argument.
+So you turn it into a shell function or a script instead:
+
+    function localserve() {
+        python -m SimpleHTTPServer $1 || python -m http.server $1
+    }
+
+But then you see all the exception tracebacks and the `No module named
+SimpleHTTPServer` error on Arch. And you cant' just `/dev/null` the `STDERR`
+stream because that hides the useful errors, too. Like *address already in use*
+or *permission denied* when attempting to bind a system port as a regular user.
+
+And once you start thinking about updating the script to check for the Python
+version and the specified port numbers you should just put this baby on your
+`$PATH` instead.
+
 
 License
 -------
